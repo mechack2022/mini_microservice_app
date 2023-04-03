@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: API-GATEWAY
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        # Route for the user service
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+        # Route for the hotel Service
+        - id: HOTEL-SERVICE
+          uri: lb://HOTEL-SERVICE
+          predicates:
+#            configuration of multiple url
+            - Path=/hotels/**,/staff/**
+        #Route for rating service
+        - id: RATING-SERVICE
+          uri: lb://RATING-SERVICE
+          predicates:
+            - Path=/ratings/**
+        # Route for the Discovery Server
+        - id: SERVICE-DISCOVERY
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/web
+          filters:
+            - SetPath=/
+        # Route for the Discovery Server Static Resources
+        - id: discovery-server-static
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/**
+
+
+#EUREKA CONFIGURATION
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+server:
+  port: 8084
