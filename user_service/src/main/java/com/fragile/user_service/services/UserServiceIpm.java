@@ -22,7 +22,7 @@ public class UserServiceIpm implements UserService {
 
 
     private final UserRepository userRepository;
-    private final HotelService hotelService; 
+    private final HotelService hotelService;
     private final RestTemplate restTemplate;
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceIpm implements UserService {
         User foundUser = userRepository.findById(userid).orElseThrow(() ->
                 new ResourcesNotFoundException("User not found with this id" + userid));
 //        api call to rating services
-        Rating[] userRating = restTemplate.getForObject("http://localhost:8083/ratings/user/" + foundUser.getId(), Rating[].class);
+        Rating[] userRating = restTemplate.getForObject("http://RATING-SERVICE/ratings/user/" + foundUser.getId(), Rating[].class);
         log.info(" fetching user with  this id {} ", foundUser.getId());
 
         List<Rating> ratings = Arrays.stream(userRating).toList();
